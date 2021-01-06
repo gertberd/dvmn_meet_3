@@ -18,13 +18,17 @@ def render_body(template, email_vars) -> str:
 
 
 @click.command()
-@click.option('--friend_name', prompt='Как зовут твоего друга? ',
+@click.option('--friend_name', required=True,
+              prompt='Как зовут твоего друга? ',
               help='Имя друга')
-@click.option('--my_name', prompt='Как тебя зовут? ',
+@click.option('--my_name', required=True,
+              prompt='Как тебя зовут? ',
               help='Твоё имя')
-@click.option('--friend_email', prompt='Укажи e-mail друга: ',
+@click.option('--friend_email', required=True,
+              prompt='Укажи e-mail друга: ',
               help='email твоего друга')
-@click.option('--website', prompt='Укажи имя веб-сайта: ',
+@click.option('--website', required=True,
+              prompt='Укажи имя веб-сайта: ',
               help='Веб-сайт')
 def main(friend_name, my_name, friend_email, website):
     load_dotenv()
