@@ -57,24 +57,20 @@ def main(friend_name, my_name, friend_email, website, gist_url, subject):
         '%my_name%': my_name
     }
     try:
-        click.echo(f'Получение текста шаблона по ссылке {gist_url}...')
         template = get_template_from_gist(gist_url)
-        body = render_body(template, email_vars)
-        email_message = build_email_message(email_from=my_email, email_to=friend_email, subject=subject, body=body)
-        click.echo('Шаблон отрендерен.')
-    except Exception as error:
+    except requests.exceptions.RequestException as error:
+        print(f"Произошла ошибка при попытке получить текст шаблона по ссылке: {gist_url}. Перепроверьте ссылку!")
         print(error)
         exit(1)
-    click.echo(f'Попытка подключиться к STMP-серверу {smtp_server}...')
+    body = render_body(template, email_vars)
+    email_message = build_email_message(email_from=my_email, email_to=friend_email, subject=subject, body=body)
+    server = smtplib.SMTP_SSL(smtp_server)
     try:
-        server = smtplib.SMTP_SSL(smtp_server)
         server.login(my_email, email_password)
-        click.echo('Отправляем письмо...')
-        server.sendmail(my_email, friend_email, email_message.as_string())
-        click.echo('Письмо отправлено!')
-    except Exception as error:
-        print(error)
+    except smtplib.SMTPAuthenticationError as error:
+        print(f"Произошла ошибка при логине на SMTP-сервере, проверьте учётные данные почты!")
     finally:
+        server.sendmail(my_email, friend_email, email_message.as_string())
         server.quit()
 
 
