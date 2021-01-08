@@ -22,10 +22,13 @@ pip install -r requirements.txt
 Usage: send_invite.py [OPTIONS]
 
 Options:
-  --friend_name TEXT   Имя друга  [required]
   --my_name TEXT       Твоё имя  [required]
+  --friend_name TEXT   Имя друга  [required]
   --friend_email TEXT  email твоего друга  [required]
   --website TEXT       Веб-сайт  [required]
+  --gist_url TEXT      URL гиста с шаблоном в формате RAW  [required]
+  --subject TEXT       Заголовок письма
+  --help               Show this message and exit.
 ```
 Или можно просто запустить скрипт:
 ```
