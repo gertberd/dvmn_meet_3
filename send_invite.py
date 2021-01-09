@@ -64,15 +64,20 @@ def main(friend_name, my_name, friend_email, website, gist_url, subject):
         exit(1)
     body = render_body(template, email_vars)
     email_message = build_email_message(email_from=my_email, email_to=friend_email, subject=subject, body=body)
-    server = smtplib.SMTP_SSL(smtp_server)
     try:
-        server.login(my_email, email_password)
-    except smtplib.SMTPAuthenticationError as error:
-        print(f"Произошла ошибка при логине на SMTP-сервере, проверьте учётные данные почты!")
-    else:
-        server.sendmail(my_email, friend_email, email_message.as_string())
-    finally:
-        server.quit()
+        server = smtplib.SMTP_SSL(smtp_server)
+        try:
+            server.login(my_email, email_password)
+            server.sendmail(my_email, friend_email, email_message.as_string())
+        except smtplib.SMTPAuthenticationError:
+            print('Ошибка аутентификации, проверьте почтовый адрес и пароль!')
+        except smtplib.SMTPException as error:
+            print(f'Произошла ошибка при отправке письма:\n{error}')
+        finally:
+            server.quit()
+    except TimeoutError:
+        print('Неудачная попытка подключения к SMTP-серверу.\n'
+              'Проверьте правильно ли вы указали имя сервера и порт подключения.')
 
 
 if __name__ == '__main__':
