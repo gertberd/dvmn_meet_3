@@ -69,8 +69,9 @@ def main(friend_name, my_name, friend_email, website, gist_url, subject):
         server.login(my_email, email_password)
     except smtplib.SMTPAuthenticationError as error:
         print(f"Произошла ошибка при логине на SMTP-сервере, проверьте учётные данные почты!")
-    finally:
+    else:
         server.sendmail(my_email, friend_email, email_message.as_string())
+    finally:
         server.quit()
 
 
